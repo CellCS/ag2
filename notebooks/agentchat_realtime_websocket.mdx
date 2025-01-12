@@ -1,6 +1,10 @@
 ---
 custom_edit_url: https://github.com/ag2ai/ag2/edit/main/notebook/agentchat_realtime_websocket.ipynb
+description: RealtimeAgent using websockets
 source_notebook: /notebook/agentchat_realtime_websocket.ipynb
+tags:
+- realtime
+- websockets
 title: RealtimeAgent with local websocket connection
 ---
 
@@ -40,7 +44,7 @@ cd ag2
 To use the realtime agent we will connect it to a local websocket trough
 the browser.
 
-We have prepared a `WebsocketAudioAdapter` to enable you to connect your
+We have prepared a `WebSocketAudioAdapter` to enable you to connect your
 realtime agent to a websocket service.
 
 To be able to run this notebook, you will need to install ag2, fastapi
@@ -51,7 +55,7 @@ and uvicorn.
 <Info>
 Install `ag2`:
 ```bash
-pip install "ag2", "fastapi>=0.115.0,<1", "uvicorn>=0.30.6,<1"
+pip install "ag2", "fastapi>=0.115.0,<1", "uvicorn>=0.30.6,<1" "flaml[automl]"
 ```
 For more information, please refer to the [installation guide](/docs/installation/Installation).
 </Info>
@@ -59,7 +63,7 @@ For more information, please refer to the [installation guide](/docs/installatio
 
 
 ```python
-!pip install "ag2" "fastapi>=0.115.0,<1" "uvicorn>=0.30.6,<1"
+!pip install "ag2" "fastapi>=0.115.0,<1" "uvicorn>=0.30.6,<1" "jinja2"
 ```
 
 ### Import the dependencies
@@ -80,7 +84,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 import autogen
-from autogen.agentchat.realtime_agent import RealtimeAgent, WebsocketAudioAdapter
+from autogen.agentchat.realtime_agent import RealtimeAgent, WebSocketAudioAdapter
 ```
 
 ## Prepare your `llm_config` and `realtime_llm_config`
@@ -108,7 +112,7 @@ assert realtime_config_list, (
     "No LLM found for the given model, please add the following lines to the OAI_CONFIG_LIST file:"
     """
     {
-        "model": "gpt-4o-realtime-preview",
+        "model": "gpt-4o-mini-realtime-preview",
         "api_key": "sk-***********************...*",
         "tags": ["gpt-4o-mini-realtime", "realtime"]
     }"""
@@ -148,7 +152,7 @@ real-time agent interactions.
     `app`, which serves as the main application.
 3.  **Define Root Endpoint**: Adds a `GET` endpoint at the root URL
     (`/`). When accessed, it returns a JSON response with the message
-    `"Websocket Audio Stream Server is running!"`.
+    `"WebSocket Audio Stream Server is running!"`.
 
 This sets up a basic FastAPI server and provides a simple health-check
 endpoint to confirm that the server is operational.
@@ -158,9 +162,10 @@ PORT = 5050
 
 app = FastAPI()
 
+
 @app.get("/", response_class=JSONResponse)
 async def index_page():
-    return {"message": "Websocket Audio Stream Server is running!"}
+    return {"message": "WebSocket Audio Stream Server is running!"}
 ```
 
 ### Prepare `start-chat` endpoint
@@ -191,6 +196,7 @@ app.mount(
 
 templates = Jinja2Templates(directory=Path(notebook_path) / "agentchat_realtime_websocket" / "templates")
 
+
 @app.get("/start-chat/", response_class=HTMLResponse)
 async def start_chat(request: Request):
     """Endpoint to return the HTML page for audio chat."""
@@ -206,7 +212,7 @@ async def start_chat(request: Request):
     connections from clients.
 3.  **Initialize Logger**: Retrieve a logger instance for logging
     purposes.
-4.  **Configure Audio Adapter**: Instantiate a `WebsocketAudioAdapter`,
+4.  **Configure Audio Adapter**: Instantiate a `WebSocketAudioAdapter`,
     connecting the WebSocket to handle audio streaming with logging.
 5.  **Set Up Realtime Agent**: Create a `RealtimeAgent` with the
     following:
@@ -232,7 +238,7 @@ async def handle_media_stream(websocket: WebSocket):
 
     logger = getLogger("uvicorn.error")
 
-    audio_adapter = WebsocketAudioAdapter(websocket, logger=logger)
+    audio_adapter = WebSocketAudioAdapter(websocket, logger=logger)
     realtime_agent = RealtimeAgent(
         name="Weather Bot",
         system_message="Hello there! I am an AI voice assistant powered by Autogen and the OpenAI Realtime API. You can ask me about weather, jokes, or anything you can imagine. Start by saying 'How can I help you'?",

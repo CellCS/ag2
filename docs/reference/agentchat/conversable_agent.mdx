@@ -421,9 +421,7 @@ Send a message to another agent.
 ```python
 {
     "content": lambda context: context["use_tool_msg"],
-    "context": {
-        "use_tool_msg": "Use tool X if they are relevant."
-    }
+    "context": {"use_tool_msg": "Use tool X if they are relevant."},
 }
 ```
   Next time, one agent can send a message B with a different "use_tool_msg".
@@ -465,9 +463,7 @@ async def a_send(message: Union[dict, str],
 ```python
 {
     "content": lambda context: context["use_tool_msg"],
-    "context": {
-        "use_tool_msg": "Use tool X if they are relevant."
-    }
+    "context": {"use_tool_msg": "Use tool X if they are relevant."},
 }
 ```
   Next time, one agent can send a message B with a different "use_tool_msg".
@@ -601,7 +597,7 @@ If `clear_history` is True, the chat history with the recipient agent will be cl
         return recipient.last_message(sender)["content"]
     ```
 - `summary_args` _dict_ - a dictionary of arguments to be passed to the summary_method.
-  One example key is "summary_prompt", and value is a string of text used to prompt a LLM-based agent (the sender or receiver agent) to reflect
+  One example key is "summary_prompt", and value is a string of text used to prompt a LLM-based agent (the sender or recipient agent) to reflect
   on the conversation and extract a summary when summary_method is "reflection_with_llm".
   The default summary_prompt is DEFAULT_SUMMARY_PROMPT, i.e., "Summarize takeaway from the conversation. Do not add any introductory phrases. If the intended request is NOT properly addressed, please point it out."
   Another available key is "summary_role", which is the role of the message sent to the agent in charge of summarizing. Default is "system".
@@ -1041,6 +1037,7 @@ Execute the code blocks and return the result.
 
 ```python
 def execute_function(func_call,
+                     call_id: Optional[str] = None,
                      verbose: bool = False) -> tuple[bool, dict[str, Any]]
 ```
 
@@ -1051,6 +1048,7 @@ Override this function to modify the way to execute function and tool calls.
 **Arguments**:
 
 - `func_call` - a dictionary extracted from openai message at "function_call" or "tool_calls" with keys "name" and "arguments".
+- `call_id` - a string to identify the tool call.
   
 
 **Returns**:
@@ -1065,7 +1063,10 @@ Override this function to modify the way to execute function and tool calls.
 ### a\_execute\_function
 
 ```python
-async def a_execute_function(func_call)
+async def a_execute_function(
+        func_call,
+        call_id: Optional[str] = None,
+        verbose: bool = False) -> tuple[bool, dict[str, Any]]
 ```
 
 Execute an async function call and return the result.
@@ -1075,6 +1076,7 @@ Override this function to modify the way async functions and tools are executed.
 **Arguments**:
 
 - `func_call` - a dictionary extracted from openai message at key "function_call" or "tool_calls" with keys "name" and "arguments".
+- `call_id` - a string to identify the tool call.
   
 
 **Returns**:
