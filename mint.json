@@ -519,9 +519,9 @@
             "blog/2025-01-09-RealtimeAgent-over-WebRTC/index",
             "blog/2025-01-08-RealtimeAgent-over-websocket/index",
             "blog/2025-01-07-Tools-Dependency-Injection/index",
-            "blog/2024-12-20-RealtimeAgent/index",
             "blog/2024-12-20-Tools-interoperability/index",
             "blog/2024-12-20-Reasoning-Update/index",
+            "blog/2024-12-20-RealtimeAgent/index",
             "blog/2024-12-06-FalkorDB-Structured/index",
             "blog/2024-12-02-ReasoningAgent2/index",
             "blog/2024-11-27-Prompt-Leakage-Probing/index",
@@ -653,7 +653,9 @@
             "notebooks/tools_interoperability",
             "notebooks/agentchat_tabular_data_rag_workflow",
             "notebooks/agentchat_realtime_webrtc",
-            "notebooks/tools_dependency_injection"
+            "notebooks/tools_dependency_injection",
+            "notebooks/tools_chat_context_dependency_injection",
+            "notebooks/agentchat_graph_rag_neo4j_native"
           ]
         },
         "notebooks/Gallery"
